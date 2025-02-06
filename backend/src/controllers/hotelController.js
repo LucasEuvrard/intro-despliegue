@@ -23,7 +23,7 @@ const getHotel = async (req, res) => {
   const { id } = req.params
 
   try {
-    const ciudad = await prisma.hotel.findUnique({
+    const hotel = await prisma.hotel.findFirst({
       where: {
         id: parseInt(id)
       },
@@ -48,6 +48,29 @@ const getHotel = async (req, res) => {
 }
 
 // Busca hotel según el id de la ciudad
+const getHotelbyCiudad = async (req, res) => {
+  const { name, id } = req.params
+
+  try {
+    const hoteles = await prisma.hotel.findMany({
+      where: {
+        id_ciudad: parseInt(id)
+      },
+      include: {
+        ciudad: true // Trae datos de la ciudad del hotel
+      }
+    })
+
+    res.send(hoteles)
+
+  } catch (error) {
+    res.status(500).json({
+      error: "Error al buscar ciudad"
+    })
+  }
+}
+
+// Busca hotel según el nombre de la ciudad
 const getHotelesbyCiudad = async (req, res) => {
   const { ciudad_id } = req.params
 
@@ -94,7 +117,7 @@ const getHotelbyNombre = async (req, res) => {
 }
 
 const createHotel = async (req, res) => {
-  const { nombre, foto_hotel, id_ciudad, calificacion, calle, num_calle, telefono } = req.body
+  const { nombre, foto_hotel, id_ciudad, cant_estrellas, cant_habitaciones, precio_noche, calle, num_calle, telefono } = req.body
 
   if (!nombre || !id_ciudad) {
     return res.status(400).json({ error: "Los campos nombre e ID de ciudad son requeridos" })
@@ -116,10 +139,12 @@ const createHotel = async (req, res) => {
     const nuevoHotel = await prisma.hotel.create({
       data: {
         nombre,
-        foto_hotel: foto_hotel || "default.jpg", // Cambiar a ruta default
+        foto_hotel: foto_hotel,
         id_ciudad: parseInt(id_ciudad),
-        calificacion: new Prisma.Decimal(calificacion), // Conversión a decimal
-        calle: calle || "Sin dirección", // por default sin dirección
+        cant_estrellas: parseInt(cant_estrellas),
+        cant_habitaciones: parseInt(cant_habitaciones),
+        precio_noche: parseInt(precio_noche),        
+        calle: calle,
         num_calle: parseInt(num_calle),
         telefono: parseInt(telefono)
       },
@@ -139,7 +164,7 @@ const createHotel = async (req, res) => {
 // Solo modifica lo que se ponga en el body, lo demás no
 const updateHotel = async (req, res) => {
   const { id } = req.params
-  const { nombre, foto_hotel, id_ciudad, calificacion, calle, num_calle, telefono } = req.body
+  const { id_hotel, nombre, foto_hotel, id_ciudad, cant_estrellas, cant_habitaciones, precio_noche, calle, num_calle, telefono } = req.body
 
   try {
     const hotelUpdated = await prisma.hotel.update({
@@ -147,13 +172,16 @@ const updateHotel = async (req, res) => {
         id: parseInt(id)
       },
       data: {
+        id: id_hotel,
         nombre,
-        foto_hotel,
-        id_ciudad,
-        calificacion,
-        calle,
-        num_calle,
-        telefono
+        foto_hotel: foto_hotel,
+        id_ciudad: parseInt(id_ciudad),
+        cant_estrellas: parseInt(cant_estrellas),
+        cant_habitaciones: parseInt(cant_habitaciones),
+        precio_noche: parseInt(precio_noche),        
+        calle: calle,
+        num_calle: parseInt(num_calle),
+        telefono: parseInt(telefono)
       },
       include: {
         ciudad: true // Trae datos de la ciudad del hotel
@@ -172,12 +200,12 @@ const deleteHotel = async (req, res) => {
   const { id } = req.params
 
   try {
-    await prisma.hotel.delete({
+    const hotel_borrado = await prisma.hotel.delete({
       where: {
         id: parseInt(id)
       }
     })
-    res.sendStatus(200)
+    res.status(200).json(hotel_borrado)
 
   } catch (error) {
     res.status(404).json({
@@ -189,6 +217,7 @@ const deleteHotel = async (req, res) => {
 module.exports = {
     getAllHoteles,
     getHotel,
+    getHotelbyCiudad,
     getHotelesbyCiudad,
     getHotelbyNombre,
     createHotel,

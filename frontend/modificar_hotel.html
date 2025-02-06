@@ -67,6 +67,10 @@
                         <label>Número de telefono</label>
                         <input id="tel" type="number" placeholder="Ingrese número de telefono" required>
                     </div>
+                    <div class="column">
+                        <button onclick="enviar_datos()">Enviar</button>
+                        <button onabort="limpiar_campos()">Limpiar</button>
+                    </div>
                     
                 </form>
             </div>
@@ -82,17 +86,18 @@
     <script>
 
         const parametros_url = new URLSearchParams(window.location.search)
-        const nombre_hotel = parametros_url.get('nombre')
-        const id_ciudad = parametros_url.get('id')
+        const hotel_id = parametros_url.get('hotel_id')
+        const id_ciudad = parametros_url.get('ciudad_id')
+        const nombre_hotel = parametros_url.get('nombre_hotel')
         let id_hotel = ''
 
         document.addEventListener('DOMContentLoaded', () => {
 
-            fetch('http://localhost:3000/api/v1/hoteles/' + nombre_hotel)
+            fetch('http://localhost:3000/api/v1/hoteles/' + hotel_id)
             .then(response => response.json())
             .then(hotel => {
                 id_hotel = hotel.id
-                
+                console.log(hotel)
                 document.getElementById('foto-hotel').value = hotel.foto_hotel
                 document.getElementById('cant-estrellas').value = hotel.cant_estrellas
                 document.getElementById('cant-habitaciones').value = hotel.cant_habitaciones
@@ -125,11 +130,10 @@
             const calle = document.getElementById('calle').value;
             const num_calle = document.getElementById('num-calle').value;
             const telefono = document.getElementById('tel').value;
-        
 
             let datos_modificacion = {
-                id: parseInt(id_hotel),
-                nombre: nombre_hotel.trim(),
+                id: parseInt(hotel_id),
+                nombre: nombre_hotel,
                 foto_hotel: foto_hotel.trim(),
                 id_ciudad: parseInt(id_ciudad),
                 cant_estrellas: parseInt(cant_estrellas),
@@ -139,8 +143,9 @@
                 num_calle: parseInt(num_calle),
                 telefono: parseInt(telefono)
             };
+            console.log(datos_modificacion)
 
-            fetch('http://localhost:3000/api/v1/ciudades/' + parseInt(id_ciudad), {
+            fetch('http://localhost:3000/api/v1/hoteles/' + parseInt(hotel_id), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

@@ -115,9 +115,9 @@
             const telefono = document.getElementById('telefono').value;
             const id_ciudad = document.getElementById('id_ciudad').value;
 
-            let datos_creacion = {
+            let datos_creacion = { 
                 nombre: nombre_hotel,
-                foto_hotel: [foto_hotel],
+                foto_hotel: foto_hotel,
                 id_ciudad: parseInt(id_ciudad),
                 cant_estrellas: parseInt(cant_estrellas),
                 cant_habitaciones: parseInt(cant_habitaciones),
@@ -126,6 +126,7 @@
                 num_calle: parseInt(num_calle),
                 telefono: parseInt(telefono)
             };
+            console.log(datos_creacion)
 
             fetch('http://localhost:3000/api/v1/hoteles/', {
                 method: 'POST',

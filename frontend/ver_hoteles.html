@@ -73,12 +73,12 @@
                     Boton_modificar.setAttribute("class", "button is-primary is-outlined")
                     Boton_modificar.innerText = "Modificar"
                     Boton_modificar.addEventListener('click', () => {
-                        Boton_modificar.href = `modificar_hotel.html?nombre=${hotel.nombre}?id=${ciudadId}`
+                        Boton_modificar.href = `modificar_hotel.html?hotel_id=${hotel.id}&ciudad_id=${ciudadId}&nombre_hotel=${hotel.nombre}`
                     })
                     // Creación del Botón para borrar el hotel
                     const Boton_borrar = document.createElement('a')
                     Boton_borrar.setAttribute("class", "button is-danger is-outlined")
-                    Boton_borrar.innerText = "Borrar ciudad"
+                    Boton_borrar.innerText = "Borrar hotel"
                     Boton_borrar.addEventListener('click', () => {
                         borrar_ciudad(hotel.id)
                     })
@@ -101,7 +101,7 @@
                     
 
                     Contenedor.appendChild(Nombre)
-                    Contenedor.appendChild(Boton_info)
+                    Contenedor.appendChild(Boton_modificar)
                     Contenedor.appendChild(Boton_borrar)
                     Estructura.appendChild(Imagen)
                     Estructura.appendChild(Contenedor)

@@ -161,7 +161,7 @@
                         const id_ciudad = opcion_elegida_ciudad.value
                         opciones_hotel.innerText = ''
 
-                        fetch('http://localhost:3000/api/v1/hoteles/' + encodeURIComponent(nombreCiudad) + '/' + id_ciudad)
+                        fetch('http://localhost:3000/api/v1/hoteles/' + nombreCiudad + '/' + id_ciudad)
                         .then(response => response.json())
                         .then(hoteles => {
                             
