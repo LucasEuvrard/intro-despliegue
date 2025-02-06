@@ -7,18 +7,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
     <link rel="stylesheet" href="styles.css"> <!-- Enlace al archivo CSS -->
 </head>
-
 <body>
-
     <div class="navbar">
-
         <nav class="navbar" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
                 
                 <a href="index.html">
                     <img src="img/Logo.png" alt="Logo de Aterrizar" class="logo">
                 </a>
-
             </div>
           
             <div id="navbarBasicExample" class="navbar-menu">
@@ -28,15 +24,11 @@
                     <a href="index.html" class="navbar-item">Inicio</a>
           
                     <a href="alojamientos.html" class="navbar-item">Alojamientos</a>
-
                     <a href="reservas.html" class="navbar-item">Reservas</a>
                     
                 </div>
-
             </div>
-
         </nav>
-
     </div>
     
     <div class="content">    
@@ -118,7 +110,6 @@
                 <button type="submit">Enviar</button>
             </form>
         </div>
-
         </section>
     
     
@@ -132,7 +123,6 @@
           const params = new URLSearchParams(window.location.search)
           return params.get('id')
         }
-
         // Función para seleccionar una de las opciones de un select según su value
         function seleccionarOpcion(selectId, valueToSelect) {
             const selectElement = document.getElementById(selectId)
@@ -143,13 +133,11 @@
                 }
             }
         }
-
         // cargar las ciudades en el select
         function cargarCiudades(callback) {
             const opciones_ciudad = document.getElementById('seleccionar-ciudad')
             // Limpia el select
             opciones_ciudad.innerHTML = '<option value="" disabled selected>Ciudad destino</option>'
-
             fetch('https://intro-despliegue.onrender.com/api/v1/ciudades/')
             .then(response => response.json())
             .then(ciudades => {
@@ -163,7 +151,6 @@
             })
             .catch(error => console.error('Error al cargar ciudades:', error))
         }
-
         // Función para configurar el cambio en el select de las ciudades (hace q se carguen los hoteles)
         function configurarCambioCiudad() {
             const opciones_ciudad = document.getElementById('seleccionar-ciudad');
@@ -188,7 +175,6 @@
                 .catch(error => console.error('Error al cargar hoteles:', error))
             }
         }
-
         // Cargar los datos de la reserva y completar el form
         async function cargarDatosReserva(reservaId) {
             try {
@@ -197,7 +183,6 @@
                     throw new Error('No se pudo obtener la reserva')
                 }
                 const reserva = await response.json();
-
     
                 document.getElementById('nombre').value = reserva.nombre_completo
                 document.getElementById('email').value = reserva.email
@@ -206,27 +191,23 @@
                 document.getElementById('numero2').value = reserva.cant_habitaciones
                 document.getElementById('fecha-entrada').value = reserva.fecha_ingreso
                 document.getElementById('fecha-salida').value = reserva.fecha_salida
-
                 // Carga opciones de ciudades y selecciona la ciudad correcta
                 cargarCiudades(() => {
                     seleccionarOpcion('seleccionar-ciudad', reserva.id_ciudad)
                     
                     const ciudadSelect = document.getElementById('seleccionar-ciudad')
                     ciudadSelect.dispatchEvent(new Event('change'))
-
                     // Espera un poco hasta que se carguen los hoteles
                     setTimeout(() => {
                     seleccionarOpcion('seleccionar-hotel', reserva.id_hotel)
                     }, 500)
                 })
-
             } catch (error) {
                 console.error('Error al cargar la reserva:', error)
                 alert('Error al cargar la reserva. Redirigiendo a la lista de reservas.')
                 window.location.href = 'gestionar-reservas.html' // Redirige a la página anterior
             }
         }
-
         // Al cargar la página
         document.addEventListener('DOMContentLoaded', () => {
             const reservaId = obtenerReservaId()
@@ -240,7 +221,6 @@
             configurarCambioCiudad()
             // Carga los datos de la resevra
             cargarDatosReserva(reservaId)
-
             const formReserva = document.getElementById('formReserva')
             formReserva.addEventListener('submit', async (event) => {
             event.preventDefault()
@@ -255,19 +235,16 @@
                 fecha_ingreso: document.getElementById('fecha-entrada').value,
                 fecha_salida: document.getElementById('fecha-salida').value
             }
-
             try {
-                const response = await fetch(`https://intro-despliegue.onrender.com/api/v1/${reservaId}`, {
+                const response = await fetch(`https://intro-despliegue.onrender.com/api/v1/reservas/${reservaId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(datosReserva)
                 })
-
                 if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.error || 'Error al actualizar la reserva')
                 }
-
                 alert('Reserva actualizada con éxito')
                 window.location.href = 'gestionar-reservas.html'
                 
@@ -277,10 +254,7 @@
             }
             })
         })
-
     </script>
-
     <script src="script.js"></script>
-
 </body>
 </html>
