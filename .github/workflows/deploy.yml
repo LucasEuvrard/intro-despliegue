@@ -1,26 +1,34 @@
-name: Deploy Static Frontend
+name: Deploy Frontend
 
 on:
   push:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clonar el repositorio
-        uses: actions/checkout@v3
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
 
       - name: Instalar dependencias
         run: npm install
+        working-directory: ./frontend
 
-      - name: Generar build
-        run: npx serve -s -l 8000
+      - name: Construir el proyecto (si aplica)
+        run: npm run build
+        working-directory: ./frontend
 
-      - name: Subir archivos a GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Deploy en GitHub Pages
+        uses: actions/upload-pages-artifact@v2
         with:
-          branch: gh-pages
-          folder: .
+          path: ./frontend
+
+      - name: Publicar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
