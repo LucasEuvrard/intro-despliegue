@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aterrizar</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Enlace al archivo CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+</head>
+
+<body>
+
+    <div class="navbar">
+
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                
+                <a href="index.html">
+                    <img src="img/Logo.png" alt="Logo de Aterrizar" class="logo">
+                </a>
+
+            </div>
+          
+            <div id="navbarBasicExample" class="navbar-menu">
+                
+                <div class="navbar-start">
+                
+                    <a href="index.html" class="navbar-item">Inicio</a>
+          
+                    <a href="alojamientos.html" class="navbar-item">Alojamientos</a>
+
+                    <a href="reservas.html" class="navbar-item">Reservas</a>
+                    
+                </div>
+
+            </div>
+
+        </nav>
+
+    </div>
+    
+    <div class="content">
+        
+        <div class="descripcion">
+            <h1>Bienvenidos a Aterrizar – Tu puerta a los mejores destinos de Argentina</h1>
+            <p>En <b>Aterrizar</b>, nos apasiona conectar personas con experiencias inolvidables.
+                Nos especializamos en ofrecer viajes en avión a las principales ciudades de Argentina,
+                brindando un servicio seguro, cómodo y accesible.</p>
+                <p>Ya sea que viajes por negocios, placer o para reencontrarte con seres queridos, estamos aquí para llevarte a tu destino con puntualidad y la mejor atención.
+                    Explora el país desde las alturas y disfruta de un viaje sin preocupaciones con <b>Aterrizar</b>.</p>
+                    <p>🌍 Descubrí Argentina con nosotros. ¡Tu próxima aventura empieza aquí!</p>
+                </div>
+                
+                <section id="inicio">          
+                    <div class="carousel">
+                        <div class="carousel-images">
+                            <img src="img/MardelPlata.jpg" alt="Imagen 1">
+                            <img src="img/VillaGesell.jpg" alt="Imagen 2">
+                            <img src="img/SanBernardo.jpg" alt="Imagen 3">
+                            <img src="img/MardeAjo.webp" alt="imagen 4">
+                            <img src="img/MardelTuyu.jpg" alt="imagen 5">
+                            <img src="img/Miramar.jpg" alt="imagen 6">
+                            <img src="img/Pinamar.jpg" alt="imagen 7">
+                            <img src="img/SantaTeresita.jpg" alt="imagen 8">
+                            <img src="img/Carilo.jpg" alt="imagen 9">
+                        </div>
+                        <button class="prev" onclick="cambiarImagen(-1)">&#10094;</button>
+                        <button class="next" onclick="cambiarImagen(1)">&#10095;</button>
+                    </div>  
+                </section>
+    </div>
+
+    <footer>
+        <p>Contacto: <a href="mailto:Aterrizar@gmail.com">Aterrizar@gmail.com</a> | Teléfono: 0800-777-2354</p>
+    </footer>
+    
+    <script src="script.js"></script>
+    
+</body>
+</html>

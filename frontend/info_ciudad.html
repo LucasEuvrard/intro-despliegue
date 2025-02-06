@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alojamientos - Aterrizar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="navbar">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a href="index.html">
+                    <img src="img/Logo.png" alt="Logo de Aterrizar" class="logo">
+                </a>
+            </div>
+            <div id="navbarBasicExample" class="navbar-menu">
+                <div class="navbar-start">
+                    <a href="index.html" class="navbar-item">Inicio</a>
+                    <a href="alojamientos.html" class="navbar-item">Alojamientos</a>
+                    <a href="reservas.html" class="navbar-item">Reservas</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="content">
+
+        <h2 id="titulo-ciudad"></h2>
+        
+        <img id="foto-ciudad">
+        
+        <p id="datos-ciudad"></p>
+
+        <a class="button is-primary is-outlined" id="boton-modificar">Modificar datos ciudad<a/>
+
+        <a class="button is-info is-outlined" href="alojamientos.html">Volver</a>
+    </div>
+
+    <div id="botones-hotel">
+     <!-- Botón para redirigir a la página de crear hoteles -->
+        <a id="crear-hoteles" class="button is-primary is-outlined">Crear Hotel</a>
+        <a id="ver-hoteles" class="button is-primary is-outlined">Ver hoteles</a>
+        <a class="button is-info is-outlined" href="alojamientos.html">Volver</a>
+    </div>
+
+    <footer>
+        <p>Contacto: <a href="mailto:Aterrizar@gmail.com">Aterrizar@gmail.com</a> | Teléfono: 0800-777-2354</p>
+    </footer>
+
+    <script>
+        const parametros_url = new URLSearchParams(window.location.search)
+        const id = parametros_url.get('id')
+
+        const boton_crear_hotel = document.getElementById('crear-hoteles')
+        boton_crear_hotel.addEventListener('click', () => {
+            boton_crear_hotel.href = `crear_hoteles.html?id=${id}`
+        }) 
+        const boton_ver_hoteles = document.getElementById('ver-hoteles')
+        boton_ver_hoteles.addEventListener('click', () => {
+            boton_ver_hoteles.href = `ver_hoteles.html?id=${id}`
+        })
+        
+        function crear_info_hotel() {
+            fetch('http://localhost:3000/api/v1/ciudades/' + parseInt(id))
+            .then(response => response.json())
+            .then(ciudad => {
+                const titulo = document.getElementById('titulo-ciudad')
+                titulo.innerText = `Información de la ciudad: ${ciudad.nombre}`
+
+                const foto = document.getElementById('foto-ciudad')
+                foto.setAttribute("src", ciudad.foto_ciudad)
+                foto.setAttribute("alt", `Imagen de la ciudad de ${ciudad.nombre}`)
+                
+                const boton_modificar = document.getElementById("boton-modificar")
+                boton_modificar.setAttribute("class", "button is-primary is-outlined")
+                boton_modificar.addEventListener('click', () => {
+                    boton_modificar.href = `modificar_ciudad.html?id=${ciudad.id}`
+                })
+
+                const datos = document.getElementById('datos-ciudad')
+                datos.innerText = `La ciudad de ${ciudad.nombre} se encuenta en la provincia de ${ciudad.provincia}. Fue fundada en el año ${ciudad.año_fundacion} y tiene un tamaño de ${ciudad.tamaño} km²`
+            })
+        }
+        crear_info_hotel()
+    </script>
+
+</body>
+</html>
+
+

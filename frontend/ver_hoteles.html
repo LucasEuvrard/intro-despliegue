@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alojamientos - Aterrizar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="navbar">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a href="index.html">
+                    <img src="img/Logo.png" alt="Logo de Aterrizar" class="logo">
+                </a>
+            </div>
+            <div id="navbarBasicExample" class="navbar-menu">
+                <div class="navbar-start">
+                    <a href="index.html" class="navbar-item">Inicio</a>
+                    <a href="alojamientos.html" class="navbar-item">Alojamientos</a>
+                    <a href="reservas.html" class="navbar-item">Reservas</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="content">
+        <h2>Alojamientos</h2>
+        <p>Aquí puedes encontrar los mejores alojamientos de Argentina</p>
+
+        <a class="button is-info is-outlined" href="alojamientos.html">Volver</a>
+
+        <div class="columns is-multiline" id="hotelesContainer">
+            <!-- Cuadrícula de imágenes dinámica -->
+        </div>
+
+        <div id="mensajeError" class="error-alojamientos"></div>
+    </div>
+
+    <footer>
+        <p>Contacto: <a href="mailto:Aterrizar@gmail.com">Aterrizar@gmail.com</a> | Teléfono: 0800-777-2354</p>
+    </footer>
+
+    <script>
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const ciudadId = urlParams.get('id');
+
+        function crear_card_hotel() {
+            const container = document.getElementById('hotelesContainer')
+            const mensaje = document.getElementById('mensajeError')
+
+            fetch('http://localhost:3000/api/v1/hoteles/' + parseInt(ciudadId) + '/hoteles' )
+            .then(response => response.json())
+            .then(hoteles => {
+                 
+                console.log(hoteles)
+                if (hoteles.length === 0) {
+                    mensaje.innerText = "No hay hoteles disponibles."
+                    return
+                }
+
+                hoteles.forEach(hotel => {
+                    
+                    // Creación Nombre
+                    const Nombre = document.createElement('p')
+                    Nombre.setAttribute("class", "city-name")
+                    Nombre.innerText = hotel.nombre
+                    // Creación del Botón modificar
+                    const Boton_modificar = document.createElement('a')
+                    Boton_modificar.setAttribute("class", "button is-primary is-outlined")
+                    Boton_modificar.innerText = "Modificar"
+                    Boton_modificar.addEventListener('click', () => {
+                        Boton_modificar.href = `modificar_hotel.html?hotel_id=${hotel.id}&ciudad_id=${ciudadId}&nombre_hotel=${hotel.nombre}`
+                    })
+                    // Creación del Botón para borrar el hotel
+                    const Boton_borrar = document.createElement('a')
+                    Boton_borrar.setAttribute("class", "button is-danger is-outlined")
+                    Boton_borrar.innerText = "Borrar hotel"
+                    Boton_borrar.addEventListener('click', () => {
+                        borrar_ciudad(hotel.id)
+                    })
+                    // Creación del Contenedor
+                    const Contenedor = document.createElement('div')
+                    Contenedor.setAttribute("class", "overlay")
+                    // Creación de la Imagen
+                    const Imagen = document.createElement('img')
+                    Imagen.setAttribute("src", hotel.foto_hotel)
+                    Imagen.setAttribute("class", "alojamiento-img")
+                    // Creación de la Estructura
+                    const Estructura = document.createElement('figure')
+                    Estructura.setAttribute("class", "image")
+                    // Creación de la Card
+                    const Card = document.createElement('div')
+                    Card.setAttribute("class", "card alojamiento-card")
+                    // Creación de las columnas
+                    const Columnas = document.createElement('div')
+                    Columnas.setAttribute("class", "column is-4")
+                    
+
+                    Contenedor.appendChild(Nombre)
+                    Contenedor.appendChild(Boton_modificar)
+                    Contenedor.appendChild(Boton_borrar)
+                    Estructura.appendChild(Imagen)
+                    Estructura.appendChild(Contenedor)
+                    Card.appendChild(Estructura)
+                    Columnas.appendChild(Card)
+                    container.appendChild(Columnas)
+                });
+            })
+        }
+
+        function borrar_ciudad(id) {
+
+            const container = document.getElementById('hotelesContainer')
+
+            fetch('http://localhost:3000/api/v1/hoteles/' + id, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(hotel => {
+                alert(`El hotel ${hotel.nombre} ha sido borrado`)
+                container.innerText = ''
+                crear_card_hotel()
+            })
+        }
+        
+        crear_card_hotel()
+    </script>
+
+</body>
+</html>
+
+

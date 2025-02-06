@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información Hotel - Aterrizar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="navbar">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a href="index.html">
+                    <img src="img/Logo.png" alt="Logo de Aterrizar" class="logo">
+                </a>
+            </div>
+            <div id="navbarBasicExample" class="navbar-menu">
+                <div class="navbar-start">
+                    <a href="index.html" class="navbar-item">Inicio</a>
+                    <a href="alojamientos.html" class="navbar-item">Alojamientos</a>
+                    <a href="reservas.html" class="navbar-item">Reservas</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="content">
+        <h2 id="titulo-hotel"></h2>
+        
+        <p id="datos-hotel"></p>
+
+        <a id="boton-modificar" class="button is-primary is-outlined">Modificar datos hotel</a>
+
+        <a class="button is-info is-outlined" href="alojamientos.html">Volver</a>
+    </div>
+
+    <footer>
+        <p>Contacto: <a href="mailto:Aterrizar@gmail.com">Aterrizar@gmail.com</a> | Teléfono: 0800-777-2354</p>
+    </footer>
+
+    <script>
+        const parametros_url = new URLSearchParams(window.location.search)
+        const id = parametros_url.get('id')
+
+        fetch(`http://localhost:3000/api/v1/hoteles/${id}`)
+        .then(response => response.json())
+        .then(hotel => {
+            const titulo = document.getElementById('titulo-hotel')
+            titulo.innerText = `Información del hotel: ${hotel.nombre}`
+
+            const datos = document.getElementById('datos-hotel')
+            datos.innerText = `Dirección: ${hotel.direccion}. Habitaciones: ${hotel.habitaciones}.`
+            
+            const boton_modificar = document.getElementById("boton-modificar")
+            boton_modificar.setAttribute("href", `modificar_hotel.html?id=${hotel.id}`)
+        });
+    </script>
+
+</body>
+</html>
+

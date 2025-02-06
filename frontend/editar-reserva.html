@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aterrizar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Enlace al archivo CSS -->
+</head>
+
+<body>
+
+    <div class="navbar">
+
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                
+                <a href="index.html">
+                    <img src="img/Logo.png" alt="Logo de Aterrizar" class="logo">
+                </a>
+
+            </div>
+          
+            <div id="navbarBasicExample" class="navbar-menu">
+                
+                <div class="navbar-start">
+                
+                    <a href="index.html" class="navbar-item">Inicio</a>
+          
+                    <a href="alojamientos.html" class="navbar-item">Alojamientos</a>
+
+                    <a href="reservas.html" class="navbar-item">Reservas</a>
+                    
+                </div>
+
+            </div>
+
+        </nav>
+
+    </div>
+    
+    <div class="content">    
+        <h2>Editar reserva</h2>
+        <p>Formulario para editar la reserva</p>
+    </div>
+        
+        
+        <section class="section-reservas">
+            
+            <div class="contenedor-form">
+                <header>Editar reserva</header>
+                <form class="form" id="formReserva" action="form-reserva">
+                    
+                    <div class="input-box">
+                        <label>Nombre completo</label>
+                        <input type="text" name="nombre" id="nombre" placeholder="Ingrese su nombre completo" required>
+                    </div>
+                    
+                    <div class="input-box">
+                        <label>Mail</label>
+                        <input type="email" name="email" id="email" placeholder="Ingrese su mail" required>
+                    </div>
+                    
+                    <div class="input-box">
+                        <label>Número de contacto</label>
+                        <input type="number" name="numContacto" id="numContacto" placeholder="Ingrese su Número" required>
+                    </div>
+                    
+                    
+                    <div class="column">
+                        <div class="input-box">
+                            <label for="">Ciudad destino</label>
+                            <div class="select-box">
+                                <select id="seleccionar-ciudad" name="ciudad" required>
+                                    <option value="" disabled selected>Ciudad destino</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="input-box">
+                            <label for="">Hotel</label>
+                            <div class="select-box">
+                                <select id="seleccionar-hotel" name="hotel" required>
+                                    <option value="" disabled selected>Hotel</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="column">
+                        <div class="input-box">
+                        <label>Cantidad de personas</label>
+                        <div class="cant_personas_container">
+                            <button class="button-form" type="button" id="restar" onclick="actualizarNumero(-1)">-</button>
+                            <input name="cant-personas" type="number" id="numero" value="1" min="1" readonly required>
+                            <button class="button-form" type="button" id="sumar" onclick="actualizarNumero(1)">+</button>
+                        </div>
+                    </div>
+                    <div class="input-box">
+                        <label>Cantidad habitaciones</label>
+                        <div class="cant_personas_container">
+                            <button class="button-form" type="button" id="restar" onclick="actualizarNumero2(-1)">-</button>
+                            <input name="cant-habitaciones" type="number" id="numero2" value="1" min="1" readonly required>
+                            <button class="button-form" type="button" id="sumar" onclick="actualizarNumero2(1)">+</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="column">
+                    <div class="input-box">
+                        <label>Fecha de Entrada:</label>
+                        <input name="fecha-entrada" id="fecha-entrada" type="date" required>
+                    </div>
+                    <div class="input-box">
+                        <label>Fecha de salida:</label>
+                        <input name="fecha-salida" id="fecha-salida" type="date" required>
+                    </div>
+                </div>
+                <button type="submit">Enviar</button>
+            </form>
+        </div>
+
+        </section>
+    
+    
+    <footer>
+        <p>Contacto: <a href="mailto:Aterrizar@gmail.com">Aterrizar@gmail.com</a> | Teléfono: 0800-777-2354</p>
+    </footer>
+    
+    <script>
+        // Función para extraer el id de la reserva desde la URL
+        function obtenerReservaId() {
+          const params = new URLSearchParams(window.location.search)
+          return params.get('id')
+        }
+
+        // Función para seleccionar una de las opciones de un select según su value
+        function seleccionarOpcion(selectId, valueToSelect) {
+            const selectElement = document.getElementById(selectId)
+            for (let i = 0; i < selectElement.options.length; i++) {
+                if (selectElement.options[i].value == valueToSelect) {
+                    selectElement.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+
+        // cargar las ciudades en el select
+        function cargarCiudades(callback) {
+            const opciones_ciudad = document.getElementById('seleccionar-ciudad')
+            // Limpia el select
+            opciones_ciudad.innerHTML = '<option value="" disabled selected>Ciudad destino</option>'
+
+            fetch('http://localhost:3000/api/v1/ciudades/')
+            .then(response => response.json())
+            .then(ciudades => {
+                ciudades.forEach(ciudad => {
+                    const option = document.createElement('option')
+                    option.innerText = ciudad.nombre
+                    option.value = ciudad.id
+                    opciones_ciudad.appendChild(option)
+                })
+                if (typeof callback === 'function') callback()
+            })
+            .catch(error => console.error('Error al cargar ciudades:', error))
+        }
+
+        // Función para configurar el cambio en el select de las ciudades (hace q se carguen los hoteles)
+        function configurarCambioCiudad() {
+            const opciones_ciudad = document.getElementById('seleccionar-ciudad');
+            const opciones_hotel = document.getElementById('seleccionar-hotel');
+            
+            opciones_ciudad.onchange = () => {
+                const opcion_elegida = opciones_ciudad.options[opciones_ciudad.selectedIndex]
+                const nombreCiudad = opcion_elegida.innerText
+                const id_ciudad = opcion_elegida.value
+                
+                opciones_hotel.innerHTML = '<option value="" disabled selected>Hotel</option>'
+                fetch('http://localhost:3000/api/v1/hoteles/' + encodeURIComponent(nombreCiudad) + '/' + id_ciudad)
+                .then(response => response.json())
+                .then(hoteles => {
+                    hoteles.forEach(hotel => {
+                        const option = document.createElement('option')
+                        option.innerText = hotel.nombre
+                        option.value = hotel.id
+                        opciones_hotel.appendChild(option)
+                    })
+                })
+                .catch(error => console.error('Error al cargar hoteles:', error))
+            }
+        }
+
+        // Cargar los datos de la reserva y completar el form
+        async function cargarDatosReserva(reservaId) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/v1/reservas/${reservaId}`)
+                if (!response.ok) {
+                    throw new Error('No se pudo obtener la reserva')
+                }
+                const reserva = await response.json();
+
+    
+                document.getElementById('nombre').value = reserva.nombre_completo
+                document.getElementById('email').value = reserva.email
+                document.getElementById('numContacto').value = reserva.numero_contacto
+                document.getElementById('numero').value = reserva.cant_personas
+                document.getElementById('numero2').value = reserva.cant_habitaciones
+                document.getElementById('fecha-entrada').value = reserva.fecha_ingreso
+                document.getElementById('fecha-salida').value = reserva.fecha_salida
+
+                // Carga opciones de ciudades y selecciona la ciudad correcta
+                cargarCiudades(() => {
+                    seleccionarOpcion('seleccionar-ciudad', reserva.id_ciudad)
+                    
+                    const ciudadSelect = document.getElementById('seleccionar-ciudad')
+                    ciudadSelect.dispatchEvent(new Event('change'))
+
+                    // Espera un poco hasta que se carguen los hoteles
+                    setTimeout(() => {
+                    seleccionarOpcion('seleccionar-hotel', reserva.id_hotel)
+                    }, 500)
+                })
+
+            } catch (error) {
+                console.error('Error al cargar la reserva:', error)
+                alert('Error al cargar la reserva. Redirigiendo a la lista de reservas.')
+                window.location.href = 'gestionar-reservas.html' // Redirige a la página anterior
+            }
+        }
+
+        // Al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            const reservaId = obtenerReservaId()
+            console.log("Reserva ID:", reservaId)
+            if (!reservaId) {
+            alert('No se recibió un ID de reserva. Redirigiendo.')
+            window.location.href = 'gestionar-reservas.html'
+            return
+            }
+            
+            configurarCambioCiudad()
+            // Carga los datos de la resevra
+            cargarDatosReserva(reservaId)
+
+            const formReserva = document.getElementById('formReserva')
+            formReserva.addEventListener('submit', async (event) => {
+            event.preventDefault()
+            const datosReserva = {
+                nombre_completo: document.getElementById('nombre').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                numero_contacto: parseInt(document.getElementById('numContacto').value.trim(), 10),
+                id_ciudad: parseInt(document.getElementById('seleccionar-ciudad').value, 10),
+                id_hotel: parseInt(document.getElementById('seleccionar-hotel').value, 10),
+                cant_personas: parseInt(document.getElementById('numero').value, 10),
+                cant_habitaciones: parseInt(document.getElementById('numero2').value, 10),
+                fecha_ingreso: document.getElementById('fecha-entrada').value,
+                fecha_salida: document.getElementById('fecha-salida').value
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/v1/reservas/${reservaId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datosReserva)
+                })
+
+                if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Error al actualizar la reserva')
+                }
+
+                alert('Reserva actualizada con éxito')
+                window.location.href = 'gestionar-reservas.html'
+                
+            } catch (error) {
+                console.error('Error al actualizar la reserva:', error)
+                alert('Error al actualizar la reserva: ' + error.message)
+            }
+            })
+        })
+
+    </script>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Reservas - Aterrizar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="navbar">
+
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                
+                <a href="index.html">
+                    <img src="img/Logo.png" alt="Logo de Aterrizar" class="logo">
+                </a>
+
+            </div>
+          
+            <div id="navbarBasicExample" class="navbar-menu">
+                
+                <div class="navbar-start">
+                
+                    <a href="index.html" class="navbar-item">Inicio</a>
+          
+                    <a href="alojamientos.html" class="navbar-item">Alojamientos</a>
+
+                    <a href="reservas.html" class="navbar-item">Reservas</a>
+                    
+                </div>
+
+            </div>
+
+        </nav>
+
+    </div>
+    
+    <div class="content">    
+        <h2>Gestionar reservas</h2>
+        <p>Seleccione una reserva para ver detalles, editarla o eliminarla.</p>
+    </div>
+
+    <section class="section-reservas">
+        <div class="container">
+            <!-- Lista de reservas -->
+            <div id="lista-reservas" class="reservas-list"></div>
+        </div>
+    </section>
+
+    <!-- Modal para ver detalles -->
+    <div id="modal-reserva" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modal-titulo"></h2>
+            <div id="modal-info"></div>
+            <div class="modal-buttons">
+                <button id="button-editar" class="button is-primary">Editar</button>
+                <button id="button-eliminar" class="button is-danger">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Contacto: <a href="mailto:Aterrizar@gmail.com">Aterrizar@gmail.com</a> | Teléfono: 0800-777-2354</p>
+    </footer>
+
+    <script>
+        let reservaSeleccionada = null;
+
+        // Cargar reservas al iniciar la página
+        document.addEventListener('DOMContentLoaded', async () => {
+            await cargarReservas()
+        })
+
+        // Obtener reservas desde el backend
+        async function cargarReservas() {
+            try {
+                const response = await fetch('http://localhost:3000/api/v1/reservas')
+                const reservas = await response.json()
+                renderizarReservas(reservas)
+
+            } catch (error) {
+                console.error('Error:', error)
+                alert('Error al cargar reservas')
+            }
+        }
+
+        // Renderizar lista de reservas
+        function renderizarReservas(reservas) {
+            const contenedor = document.getElementById('lista-reservas')
+            contenedor.innerHTML = ''
+
+            reservas.forEach(reserva => {
+                const reservaElement = document.createElement('div')
+                reservaElement.className = 'reserva-item'
+                
+                reservaElement.innerHTML = `
+                    <p><strong>ID:</strong> ${reserva.id}</p>
+                    <p><strong>Nombre:</strong> ${reserva.nombre_completo}</p>
+                    <p><strong>Ciudad:</strong> ${reserva.ciudad.nombre}</p>
+                    <p><strong>Hotel:</strong> ${reserva.hotel.nombre}</p>
+                `;
+                
+                reservaElement.addEventListener('click', () => abrirModal(reserva))
+                contenedor.appendChild(reservaElement)
+            });
+        }
+
+        // Mostrar modal con detalles
+        function abrirModal(reserva) {
+            reservaSeleccionada = reserva;
+            const modal = document.getElementById('modal-reserva')
+
+            modal.style.display = 'flex'
+
+            // Número de reserva
+            document.getElementById('modal-titulo').innerHTML = `<strong>Reserva #${reserva.id}</strong>`
+            
+            // Detalles de la reserva
+            document.getElementById('modal-info').innerHTML = `
+                <p><strong>Email:</strong> ${reserva.email}</p>
+                <p><strong>Contacto:</strong> ${reserva.numero_contacto}</p>
+                <p><strong>Personas:</strong> ${reserva.cant_personas}</p>
+                <p><strong>Habitaciones:</strong> ${reserva.cant_habitaciones}</p>
+                <p><strong>Fecha de ingreso:</strong> ${reserva.fecha_ingreso}</p>
+                <p><strong>Fecha de salida:</strong> ${reserva.fecha_salida}</p>
+            `
+        }
+
+        // Botones del modal
+        // Cerrar modal
+        document.querySelector('.close-modal').addEventListener('click', () => {
+            document.getElementById('modal-reserva').style.display = 'none'
+        })
+
+        // Editar reserva
+        document.getElementById('button-editar').addEventListener('click', () => {
+            window.location.href = `editar-reserva.html?id=${reservaSeleccionada.id}`
+        })
+
+        // Eliminar reserva
+        document.getElementById('button-eliminar').addEventListener('click', async () => {
+            if (confirm('¿Estás seguro de eliminar esta reserva?')) {
+                try {
+                    const response = await fetch(`http://localhost:3000/api/v1/reservas/${reservaSeleccionada.id}`, {
+                        method: 'DELETE'
+                    })
+                    
+                    if (response.ok) {
+                        alert('Reserva eliminada')
+                        document.getElementById('modal-reserva').style.display = 'none'
+                        await cargarReservas()
+                    }
+
+                } catch (error) {
+                    console.error('Error:', error)
+                    alert('Error al eliminar reserva')
+                }
+            }
+        })
+
+    </script>
+</body>
+</html>

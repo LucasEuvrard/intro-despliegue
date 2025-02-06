@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aterrizar</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Enlace al archivo CSS -->
+</head>
+<body>
+    <div class="navbar">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                
+                <a href="index.html">
+                    <img src="img/Logo.png" alt="Logo de Aterrizar" class="logo">
+                </a>
+            </div>
+          
+            <div id="navbarBasicExample" class="navbar-menu">
+                
+                <div class="navbar-start">
+                
+                    <a href="index.html" class="navbar-item">Inicio</a>
+          
+                    <a href="alojamientos.html" class="navbar-item">Alojamientos</a>
+                    <a href="reservas.html" class="navbar-item">Reservas</a>
+                    
+                </div>
+            </div>
+        </nav>
+    </div>
+    
+    <div class="content">
+    
+        <h2 id="titulo-ciudad"></h2>
+
+        <section class="section-form">
+            
+            <div class="contenedor-form">
+                <header>Formulario para modificar ciudades</header>
+                <form class="form">
+                    
+                    <div class="input-box">
+                        <label>Foto de la ciudad</label>
+                        <input id="foto-ciudad" type="text" placeholder="Ingrese la URL de la foto de la ciudad">
+                    </div>
+                    <div class="input-box">
+                        <label>Provincia de la ciudad</label>
+                        <input id="provincia-ciudad" type="text" placeholder="Ingrese la provincia a la que pertenece la ciudad">
+                    </div>
+                    <div class="input-box">
+                        <label>Tamaño de la ciudad</label>
+                        <input id="tamaño-ciudad" type="number" placeholder="Ingrese el tamaño de la ciudad" required>
+                    </div>
+                    <div class="input-box">
+                        <label>Año de fundación de la ciudad</label>
+                        <input id="año-fundación" type="number" placeholder="Ingrese el año de fundación de la ciudad">
+                    </div>
+                    
+                    <div class="column">
+                        <button onclick="enviar_datos()">Enviar</button>
+                        <button onabort="limpiar_campos()">Limpiar</button>
+                    </div>
+                    
+                </form>
+            </div>
+        </section>
+
+        <a class="button is-info is-outlined" href="alojamientos.html">Volver</a>
+        
+    </div>
+    <footer>
+        <p>Contacto: <a href="mailto:Aterrizar@gmail.com">Aterrizar@gmail.com</a> | Teléfono: 0800-777-2354</p>
+    </footer>
+    
+    <script>
+
+        const parametros_url = new URLSearchParams(window.location.search)
+        const id_ciudad = parametros_url.get('id')
+        let nombre_ciudad = ""
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            fetch('http://localhost:3000/api/v1/ciudades/' + parseInt(id_ciudad))
+            .then(response => response.json())
+            .then(ciudad => {
+                nombre_ciudad = ciudad.nombre
+                const titulo = document.getElementById('titulo-ciudad')
+                titulo.innerText = `Modificar datos de: ${ciudad.nombre}`
+
+                console.log(ciudad.foto_ciudad)
+                document.getElementById('foto-ciudad').value = ciudad.foto_ciudad
+                document.getElementById('provincia-ciudad').value = ciudad.provincia
+                document.getElementById('tamaño-ciudad').value = ciudad.tamaño
+                document.getElementById('año-fundación').value = ciudad.año_fundacion
+            })
+
+        })
+
+        function limpiar_campos(){
+            document.getElementById('foto-ciudad').value = '';
+            document.getElementById('provincia-ciudad').value = '';
+            document.getElementById('tamaño-ciudad').value = '';
+            document.getElementById('año-fundación').value = '';
+        }
+        
+        function enviar_datos(){
+            event.preventDefault()
+            
+            const foto_ciudad = document.getElementById('foto-ciudad').value;
+            const provincia_ciudad = document.getElementById('provincia-ciudad').value;
+            const tamaño_ciudad = document.getElementById('tamaño-ciudad').value;
+            const año_fundación = document.getElementById('año-fundación').value;
+
+            let datos_creacion = {
+                id: parseInt(id_ciudad),
+                nombre: nombre_ciudad.trim(),
+                foto_ciudad: foto_ciudad.trim(),
+                provincia: provincia_ciudad.trim(),
+                tamaño: parseFloat(tamaño_ciudad),
+                año_fundacion: parseInt(año_fundación)
+            };
+
+            fetch('http://localhost:3000/api/v1/ciudades/' + parseInt(id_ciudad), {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datos_creacion)
+            }).then(response => {
+                if (response.ok) {
+                    alert(`Ciudad ${nombre_ciudad} modificada con éxito`)
+                    limpiar_campos()
+                }
+                else {
+                    alert('Error al modificar la ciudad')
+                }
+            });
+        }
+        
+    </script>
+</body>
+</html>
