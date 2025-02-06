@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Clonar el repositorio
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Instalar dependencias
         run: npm install
@@ -20,7 +20,7 @@ jobs:
         run: npx serve -s -l 8000
 
       - name: Deploy en GitHub Pages
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           path: .
 
