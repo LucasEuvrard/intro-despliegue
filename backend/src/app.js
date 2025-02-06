@@ -19,7 +19,7 @@ app.use(
     origin: "https://lucaseuvrard.github.io/intro-despliegue/",
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
-);
+)
 
 const ciudadRoutes = require('./routes/ciudadRoutes')
 app.use('/api/v1/ciudades', ciudadRoutes)

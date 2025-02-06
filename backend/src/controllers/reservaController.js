@@ -34,7 +34,7 @@ const getReserva = async (req, res) => {
       }
     })
 
-    if(!reserva) {
+    if(reserva === null) {
       res.status(404).json({
         error: "Reserva no encontrada"
       })

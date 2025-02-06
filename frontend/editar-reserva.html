@@ -138,7 +138,7 @@
             const opciones_ciudad = document.getElementById('seleccionar-ciudad')
             // Limpia el select
             opciones_ciudad.innerHTML = '<option value="" disabled selected>Ciudad destino</option>'
-            fetch('https://intro-despliegue.onrender.com/api/v1/ciudades/')
+            fetch('https://intro-despliegue.onrender.com/api/v1/ciudades')
             .then(response => response.json())
             .then(ciudades => {
                 ciudades.forEach(ciudad => {
