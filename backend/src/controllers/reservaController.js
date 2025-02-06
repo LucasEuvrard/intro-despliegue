@@ -34,14 +34,12 @@ const getReserva = async (req, res) => {
       }
     })
 
-    if(reserva === null) {
+    if(!reserva) {
       res.status(404).json({
         error: "Reserva no encontrada"
       })
       return
     }
-    res.json(reserva)
-
     res.json(reserva)
 
   } catch (error) {
