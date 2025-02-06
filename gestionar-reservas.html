@@ -144,7 +144,7 @@
         document.getElementById('button-eliminar').addEventListener('click', async () => {
             if (confirm('¿Estás seguro de eliminar esta reserva?')) {
                 try {
-                    const response = await fetch(`https://intro-despliegue.onrender.com/api/v1/${reservaSeleccionada.id}`, {
+                    const response = await fetch(`https://intro-despliegue.onrender.com/api/v1/reservas/${reservaSeleccionada.id}`, {
                         method: 'DELETE'
                     })
                     
