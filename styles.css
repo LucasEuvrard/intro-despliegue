@@ -170,6 +170,7 @@ button.prev:hover, button.next:hover {
 
 .section-form {
     display: flex;
+    align-items: center;
     justify-content: center;
     background-color: black;
     padding: 20px;
@@ -180,7 +181,6 @@ button.prev:hover, button.next:hover {
 .section-reservas {
     min-height: 100vh;
     display: flex;
-    align-items: center;
     justify-content: center;
     background-color: black;
     padding: 20px;
