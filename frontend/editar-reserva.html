@@ -150,7 +150,7 @@
             // Limpia el select
             opciones_ciudad.innerHTML = '<option value="" disabled selected>Ciudad destino</option>'
 
-            fetch('http://localhost:3000/api/v1/ciudades/')
+            fetch('https://intro-despliegue.onrender.com/api/v1/ciudades/')
             .then(response => response.json())
             .then(ciudades => {
                 ciudades.forEach(ciudad => {
@@ -175,7 +175,7 @@
                 const id_ciudad = opcion_elegida.value
                 
                 opciones_hotel.innerHTML = '<option value="" disabled selected>Hotel</option>'
-                fetch('http://localhost:3000/api/v1/hoteles/' + encodeURIComponent(nombreCiudad) + '/' + id_ciudad)
+                fetch('https://intro-despliegue.onrender.com/api/v1/hoteles/' + encodeURIComponent(nombreCiudad) + '/' + id_ciudad)
                 .then(response => response.json())
                 .then(hoteles => {
                     hoteles.forEach(hotel => {
@@ -192,7 +192,7 @@
         // Cargar los datos de la reserva y completar el form
         async function cargarDatosReserva(reservaId) {
             try {
-                const response = await fetch(`http://localhost:3000/api/v1/reservas/${reservaId}`)
+                const response = await fetch(`https://intro-despliegue.onrender.com/api/v1/reservas/${reservaId}`)
                 if (!response.ok) {
                     throw new Error('No se pudo obtener la reserva')
                 }
@@ -257,7 +257,7 @@
             }
 
             try {
-                const response = await fetch(`http://localhost:3000/api/v1/reservas/${reservaId}`, {
+                const response = await fetch(`https://intro-despliegue.onrender.com/api/v1/${reservaId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(datosReserva)

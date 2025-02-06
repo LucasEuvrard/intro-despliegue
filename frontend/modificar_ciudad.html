@@ -82,7 +82,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
 
-            fetch('http://localhost:3000/api/v1/ciudades/' + parseInt(id_ciudad))
+            fetch('https://intro-despliegue.onrender.com/api/v1/ciudades/' + parseInt(id_ciudad))
             .then(response => response.json())
             .then(ciudad => {
                 nombre_ciudad = ciudad.nombre
@@ -122,7 +122,7 @@
                 año_fundacion: parseInt(año_fundación)
             };
 
-            fetch('http://localhost:3000/api/v1/ciudades/' + parseInt(id_ciudad), {
+            fetch('https://intro-despliegue.onrender.com/api/v1/ciudades/' + parseInt(id_ciudad), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

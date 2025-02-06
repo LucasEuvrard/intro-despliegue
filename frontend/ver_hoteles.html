@@ -52,7 +52,7 @@
             const container = document.getElementById('hotelesContainer')
             const mensaje = document.getElementById('mensajeError')
 
-            fetch('http://localhost:3000/api/v1/hoteles/' + parseInt(ciudadId) + '/hoteles' )
+            fetch('https://intro-despliegue.onrender.com/api/v1/hoteles/' + parseInt(ciudadId) + '/hoteles' )
             .then(response => response.json())
             .then(hoteles => {
                  
@@ -116,7 +116,7 @@
 
             const container = document.getElementById('hotelesContainer')
 
-            fetch('http://localhost:3000/api/v1/hoteles/' + id, {
+            fetch('https://intro-despliegue.onrender.com/api/v1/hoteles/' + id, {
                 method: 'DELETE'
             })
             .then(response => response.json())
