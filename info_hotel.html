@@ -44,7 +44,7 @@
         const parametros_url = new URLSearchParams(window.location.search)
         const id = parametros_url.get('id')
 
-        fetch(`http://localhost:3000/api/v1/hoteles/${id}`)
+        fetch(`https://intro-despliegue.onrender.com/api/v1/${id}`)
         .then(response => response.json())
         .then(hotel => {
             const titulo = document.getElementById('titulo-hotel')

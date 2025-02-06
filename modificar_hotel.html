@@ -93,7 +93,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
 
-            fetch('http://localhost:3000/api/v1/hoteles/' + hotel_id)
+            fetch('https://intro-despliegue.onrender.com/api/v1/hoteles/' + hotel_id)
             .then(response => response.json())
             .then(hotel => {
                 id_hotel = hotel.id
@@ -145,7 +145,7 @@
             };
             console.log(datos_modificacion)
 
-            fetch('http://localhost:3000/api/v1/hoteles/' + parseInt(hotel_id), {
+            fetch('https://intro-despliegue.onrender.com/api/v1/hoteles/' + parseInt(hotel_id), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

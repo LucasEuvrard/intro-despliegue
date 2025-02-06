@@ -101,7 +101,7 @@
                 tamaño: parseFloat(tamaño_ciudad),
                 año_fundacion: parseInt(año_fundación)
             };
-            fetch('http://localhost:3000/api/v1/ciudades/', {
+            fetch('https://intro-despliegue.onrender.com/api/v1/ciudades/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

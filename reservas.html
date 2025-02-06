@@ -137,7 +137,7 @@
             const opciones_ciudad = document.getElementById('seleccionar-ciudad')
             const opciones_hotel = document.getElementById('seleccionar-hotel')
 
-            fetch('http://localhost:3000/api/v1/ciudades/')
+            fetch('https://intro-despliegue.onrender.com/api/v1/ciudades/')
             .then(response => response.json())
             .then(ciudades => {
 
@@ -161,7 +161,7 @@
                         const id_ciudad = opcion_elegida_ciudad.value
                         opciones_hotel.innerText = ''
 
-                        fetch('http://localhost:3000/api/v1/hoteles/' + nombreCiudad + '/' + id_ciudad)
+                        fetch('https://intro-despliegue.onrender.com/api/v1/hoteles/' + nombreCiudad + '/' + id_ciudad)
                         .then(response => response.json())
                         .then(hoteles => {
                             
@@ -215,7 +215,7 @@
             fecha_salida: fechaSalida
             }
 
-            fetch('http://localhost:3000/api/v1/reservas', {
+            fetch('https://intro-despliegue.onrender.com/api/v1/reservas', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
