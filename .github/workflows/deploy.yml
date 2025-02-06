@@ -1,4 +1,4 @@
-name: Deploy Static Frontend
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -8,22 +8,21 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
 
     steps:
-      - name: Clonar el repositorio
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Instalar dependencias
         run: npm install
 
-      - name: Generar build
-        run: npx serve -s -l 8000
-
-      - name: Deploy en GitHub Pages
-        uses: actions/upload-pages-artifact@v3
+      - name: Desplegar en GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          path: .
-
-      - name: Publicar en GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          enable_jekyll: false
